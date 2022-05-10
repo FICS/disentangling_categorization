@@ -117,10 +117,11 @@ The object architecture of an agent is as follows: Percept model (CNN, CW, Proto
 
 ### Checkpoints (download)
 
-You can download the checkpoints for all the percept models used in the paper. The current filename is `disent_ckpt_041922-211456.zip`. Download it to `DATA_ROOT` and unzip:
+You can download the checkpoints for all the percept models used in the paper. The current filename is `disent_ckpt_041922-211456.zip`. Download it to `SAVE_ROOT` and unzip:
 
 ```
-wget https://www.dropbox.com/s/ep3p9cvcnulrign/percept_ckpt_041922-211456.zip?dl=0 -O $DATA_ROOT/percept_ckpt.zip
+cd $SAVE_ROOT
+wget https://www.dropbox.com/s/ep3p9cvcnulrign/percept_ckpt_041922-211456.zip?dl=0 -O percept_ckpt.zip
 unzip percept_ckpt.zip
 ```
 
@@ -140,22 +141,25 @@ We provide the configuration files to run the train scripts for each percept typ
 
 ### Checkpoints (download)
 
-You can download the checkpoints for the agents (which use percept model checkpoints above). 
+You can download the checkpoints for the agents (which use percept model checkpoints above):
 
-
-### Checkpoints (re-create)
-
-The main file for training agents is `train_modular.py` which takes any configuration file found in `research_pool/config_archive`. However, since the paper involves many experiment runs, we cascade the script calls across compute nodes and GPUs in a shell-friendly way using `tmuxp`. The notebook for this cascade is found in `research_pool/cascade.ipynb`. For example, launch jupyter notebook from `DISENT_ROOT` and open `cascade.ipynb`.  
-
-The main driver in the notebook is the variable `opt`, which contains a record for the configs to cascade, simply uncomment the ones you wish to run on your compute nodes. The main assumption here is that each machine can access `DATA_ROOT` and `SAVE_ROOT`. Likewise, update `node_to_gpuid`, which tells the notebook how many GPUs each node has. You can then run the rest of the cells in the notebook. It will perform binpacking to split up all of the jobs into appropriate nodes/GPUs, and output a `tmuxp` session file in `research_pool/sessions/`. Once the notebook has created it, you can simply activate the conda environment and run `tmuxp load <session file>` to start running all of the experiments you selected in `opt`. 
-
-How did we create the config files? We have a separate config generation notebook which automates the creation based on the experiment parameters in `research_pool/config.py`, however it requires some polishing to make it ready for public release. 
+```
+cd $SAVE_ROOT
+wget https://www.dropbox.com/s/e6151tbhvmnie5m/agent_savedata_042722-150315.zip?dl=0 -O agent_savedata.zip
+unzip agent_savedata.zip
+```
 
 
 ## Figure generation
 
-Before you start generating figures from the paper, you can run the last cell in `cascade.ipynb` to check that all of the experiments finished. If they all finished, you will get an output of each config file that didn't finish. You can try running it individually to see what went wrong. 
+You can recreate a subset of the experiments (Q1) on a single GPU by running 
 
-You can generate the figures in the paper using notebooks found in `research_pool/`. The main notebook is `research_pool/plotting_SEMIOSIS`. 
+```
+conda run -n disent --no-capture-output python $DISENT_ROOT/plotting_main.py -e q1 -g 1 --recreate
+```
+
+It will try to grab agent results database if it exists, otherwise it will schedule the analysis runs using agent checkpoints from above, then print results for Q1. 
+
+
 
 
