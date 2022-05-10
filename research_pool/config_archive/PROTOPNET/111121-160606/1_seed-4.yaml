@@ -1,0 +1,49 @@
+add_on_layers_type: regular
+architecture: resnet50
+base_cnn_ckpt: null
+coefs:
+  clst: 0.8
+  crs_ent: 1
+  l1: 0.0001
+  sep: -0.08
+dataset: cub10
+img_size: 224
+joint_lr_step_size: 5
+joint_optimizer_lrs:
+  add_on_layers: 0.003
+  features: 0.0001
+  prototype_vectors: 0.003
+last_layer_optimizer_lr: 0.0001
+lr: 0.1
+momentum: 0.9
+num_classes: 10
+prefix: ''
+print_freq: 10
+proto_per_class: 100
+prototype_activation_function: log
+push_start: 10
+resume: ''
+run_id: 1
+save_dir: ckpt/autotrain/PROTOPNET/cub10/111121-160606/seed-4
+seed: 4
+test_batch_size: 256
+test_dir: dataset/cub200_cropped_10c_seed=2/test_cropped
+train_batch_size: 256
+train_dir: dataset/cub200_cropped_10c_seed=2/train_cropped_augmented
+train_epochs: 21
+train_mean:
+- 0.485
+- 0.456
+- 0.406
+train_push_batch_size: 256
+train_push_dir: dataset/cub200_cropped_10c_seed=2/train_cropped
+train_std:
+- 0.229
+- 0.224
+- 0.225
+warm_epochs: 5
+warm_optimizer_lrs:
+  add_on_layers: 0.003
+  prototype_vectors: 0.003
+weight_decay: 0.0001
+workers: 64
