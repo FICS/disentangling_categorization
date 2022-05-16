@@ -1,4 +1,17 @@
-## Installation
+# Disentangling categorization
+
+This repo contains code and experiment files for the paper "Disentangling Categorization in Multi-agent Emergent Communication" to appear in proceedings of NAACL'22. 
+
+## Docker installation
+
+As part of the NAACL'22 reproducibility track, we provide a dockerfile which can reproduce a result from the paper. Our file (`Dockerfile`) pulls the necessary data and performs the analysis for Table 1 in the paper, then prints the LaTeX table to standard output. 
+
+First, make sure docker-cli is installed based on the Docker instructions for your platform. To build the image, from the repo folder do:
+
+`docker build -t disent .`
+
+
+## Bare-metal installation
 
 Clone the repo to a folder, and set up environment variables in your shell:
 ```
@@ -6,16 +19,17 @@ $ export DISENT_ROOT=<path to cloned repo>
 $ export DATA_ROOT=<path to folder to store input data>
 $ export SAVE_ROOT=<path to folder to store output data>
 ```
-`DATA_ROOT` and `SAVE_ROOT` can be any folders you choose, just make sure they exist before continuing. 
+`DATA_ROOT`, and`SAVE_ROOT` can be any folders you choose, just make sure they exist before continuing. `DATA_ROOT` will house the processed input data, while `SAVE_ROOT` will store the byproducts of experiments and analysis. 
 
 Install the conda environment and activate it (assumed to be active for rest of the instructions):
 
 ```
+$ cd $DISENT_ROOT
 $ bash -i setup.sh
 $ conda activate disent
 ```
 
-Note: Scripts in this project were not tested on Windows systems, only Ubuntu 18/20. If you have ideas to add the functionality, open an issue or MR. 
+Note: Scripts in this project were so far only tested on Linux systems (e.g., Debian and Ubuntu installs). If you have ideas to add the functionality for Windows or MacOS, open an issue or MR. 
 
 
 ### JupyterLab
@@ -42,11 +56,11 @@ In the folder where it installed, open `kernel.json` and define the same environ
 
 ### CUB200
 
-CUB200 recently moved to a new data provider, so report any dead links if you come across them. 
+CUB200 recently moved to a new data provider, so report any dead links if you come across them. Here are instructions to re-create the datasets in our paper. 
 
 #### Automatic script
 
-With `DISENT_ROOT` and `DATA_ROOT` set, simply activate the conda environment and run `python $DISENT_ROOT/data/cub200.py` to automatically download and prepare the dataset, or to open in a conda session automatically: `conda run --no-capture-output -n disent python $DISENT_ROOT/data/cub200.py`. It is recommended to run in a tmux session, as the data augmentation step can take from ten minutes to a couple hours depending on your storage speed. This option should work for most people. 
+With `DISENT_ROOT` and `DATA_ROOT` set, simply activate the conda environment and run `python $DISENT_ROOT/data/cub200.py` to automatically download and prepare the dataset, or as a one-liner: `conda run --no-capture-output -n disent python $DISENT_ROOT/data/cub200.py`. It is recommended to run in a tmux session, since the data augmentation step can take between ten minutes to a couple hours depending on your storage speed. This option should work for most people. 
 
 #### Manual
 
@@ -71,9 +85,8 @@ rsync -avh --progress $DATA_ROOT/dataset/CUB_200_2011/cropped_split/train/ $DATA
 rsync -avh --progress $DATA_ROOT/dataset/CUB_200_2011/cropped_split/test/ $DATA_ROOT/dataset/cub200_cropped_seed=100/test_cropped
 ```
 7. Augment the training set using `python $DISENT_ROOT/data/augment_cub200.py --seed <some integer>`
-8. (optional) Run `data/dataset_statistics.py` to get the updated mean/std values, then add them to config.py. This is only if you want to train a percept model from scratch using CUB200, instead of using ImageNet weights. 
+8. (optional) Run `data/dataset_statistics.py --dataset cub200` to get the updated mean/std values, then add them to config.py. This is only if you want to train a percept model from scratch using CUB200, instead of using ImageNet weights. 
 9. Run `data/subsets_cub200.py` to get CUB10 datasets for each multi-agent seed. 
-10. (optional) Run `data/dataset_statistics.py` to get the mean/std values of each subset for `config.py`, otherwise just use the statistics for your pre-trained weights (in our case ImageNet). 
 
 
 ### miniImageNet
@@ -89,7 +102,7 @@ As before with `DISENT_ROOT` and `DATA_ROOT` set, simply run `conda run --no-cap
 
 The full manual steps are as follows. 
 
-1. Download the dataset miniImageNet: https://drive.google.com/drive/folders/17a09kkqVivZQFggCw9I_YboJ23tcexNM?usp=sharing into `$DATA_ROOT/dataset/miniImageNet`:
+1. Download the dataset miniImageNet into `$DATA_ROOT/dataset/miniImageNet` using `gdown`:
 ```
 $ mkdir -p $DATA_ROOT/dataset/miniImageNet
 $ pip install gdown 
@@ -113,7 +126,7 @@ We provide custom data loaders that should be useful for big experiments involvi
 
 ## Percept models (vision modules)
 
-The object architecture of an agent is as follows: Percept model (CNN, CW, ProtoPNet, etc.) -> Percept wrapper (standardized interface to agents) -> Features+Structures interface (e.g., `community/ConceptWhitening/features.py`) -> EGG Sender or Receiver wrapper (`agents2.py`). 
+Similar to other papers in this area, each agent comprises of two parts: a perception module and an encoder/decoder module. Our code is adapted from the GumbelSoftmax agents in Facebook's EGG framework, which follows a similar agent composition. In our code, the object architecture of an agent translate to the following terms: Percept model (CNN, CW, ProtoPNet, etc.) -> Percept wrapper (standardized interface to agents) -> Features+Structures interface (e.g., `community/ConceptWhitening/features.py`) -> EGG Sender or Receiver wrapper (`agents2.py`, which are wrappers around the encoder/decoder components). 
 
 ### Checkpoints (download)
 
@@ -158,7 +171,7 @@ You can recreate a subset of the experiments (Q1) on a single GPU by running
 conda run -n disent --no-capture-output python $DISENT_ROOT/plotting_main.py -e q1 -g 1 --recreate
 ```
 
-It will try to grab agent results database if it exists, otherwise it will schedule the analysis runs using agent checkpoints from above, then print results for Q1. 
+It will try to grab agent results database if it exists, otherwise it will schedule the analysis runs using agent checkpoints from above, then print results for Table 1 in the paper. 
 
 
 

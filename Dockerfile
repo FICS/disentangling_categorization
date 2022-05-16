@@ -26,20 +26,15 @@ RUN curl -so ~/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-py39_
     && rm ~/miniconda.sh
 ENV PATH=/opt/conda/bin:$PATH
 
-# Install tini
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "-g", "--"]
-
 # ============ result recreate =============
 RUN mkdir -p /data/workspace/
 
 ENV DATA_ROOT /data/workspace
 ENV SAVE_ROOT /data/workspace
 ENV DISENT_ROOT /data/workspace/src/disentangling_categorization
-RUN mkdir -p $DISENT_ROOT
-COPY * /data/workspace/src/disentangling_categorization/
+
+WORKDIR /data/workspace/src
+RUN git clone https://github.com/FICS/disentangling_categorization
 RUN bash -i $DISENT_ROOT/setup.sh
 
 ENV CONDA_DEFAULT_ENV=disent
