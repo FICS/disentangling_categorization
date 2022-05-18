@@ -1,10 +1,10 @@
 # Disentangling categorization
 
-This repo contains code and experiment files for the paper "Disentangling Categorization in Multi-agent Emergent Communication" to appear in proceedings of NAACL'22. 
+This repo contains code and experiment files for the paper "Disentangling Categorization in Multi-agent Emergent Communication" to appear in proceedings of NAACL 2022. 
 
 ## Docker installation
 
-As part of the NAACL'22 reproducibility track, we provide a dockerfile which can reproduce a result from the paper. Our file (`Dockerfile`) pulls the necessary data and performs the analysis for Table 1 in the paper, then prints the LaTeX table to standard output. 
+As part of the NAACL 2022 reproducibility track, we provide a dockerfile which can reproduce a result from the paper. Our file (`Dockerfile`) pulls the necessary data and performs the analysis for Table 1 in the paper, then prints the LaTeX table to standard output. 
 
 First, make sure docker-cli is installed based on the Docker instructions for your platform. To build the image, from the repo folder do:
 
@@ -19,7 +19,7 @@ $ export DISENT_ROOT=<path to cloned repo>
 $ export DATA_ROOT=<path to folder to store input data>
 $ export SAVE_ROOT=<path to folder to store output data>
 ```
-`DATA_ROOT`, and`SAVE_ROOT` can be any folders you choose, just make sure they exist before continuing. `DATA_ROOT` will house the processed input data, while `SAVE_ROOT` will store the byproducts of experiments and analysis. 
+`DATA_ROOT` and `SAVE_ROOT` can be any folders you choose, just make sure they exist before continuing. `DATA_ROOT` will house the processed input data, while `SAVE_ROOT` will store the byproducts of experiments and analysis. 
 
 Install the conda environment and activate it (assumed to be active for rest of the instructions):
 
@@ -53,18 +53,21 @@ In the folder where it installed, open `kernel.json` and define the same environ
 
 ## Data
 
+Here are instructions to re-create the datasets in our paper. 
 
-### CUB200
+### CUB200 & CUB10
 
-CUB200 recently moved to a new data provider, so report any dead links if you come across them. Here are instructions to re-create the datasets in our paper. 
+CUB200 recently moved to a new data provider, so report any dead links if you come across them. 
 
 #### Automatic script
 
 With `DISENT_ROOT` and `DATA_ROOT` set, simply activate the conda environment and run `python $DISENT_ROOT/data/cub200.py` to automatically download and prepare the dataset, or as a one-liner: `conda run --no-capture-output -n disent python $DISENT_ROOT/data/cub200.py`. It is recommended to run in a tmux session, since the data augmentation step can take between ten minutes to a couple hours depending on your storage speed. This option should work for most people. 
 
+
 #### Manual
 
-If you want to manually run through the steps, perform the following.
+<details>
+<summary>If you want to manually run through the steps, perform the following.</summary>
 
 1. Download the dataset archive CUB_200_2011.tgz from http://www.vision.caltech.edu/datasets/cub_200_2011/: 
 ```
@@ -88,6 +91,8 @@ rsync -avh --progress $DATA_ROOT/dataset/CUB_200_2011/cropped_split/test/ $DATA_
 8. (optional) Run `data/dataset_statistics.py --dataset cub200` to get the updated mean/std values, then add them to config.py. This is only if you want to train a percept model from scratch using CUB200, instead of using ImageNet weights. 
 9. Run `data/subsets_cub200.py` to get CUB10 datasets for each multi-agent seed. 
 
+</details>
+
 
 ### miniImageNet
 
@@ -100,7 +105,8 @@ As before with `DISENT_ROOT` and `DATA_ROOT` set, simply run `conda run --no-cap
 
 #### Manual
 
-The full manual steps are as follows. 
+<details>
+<summary>The manual steps are as follows.</summary>
 
 1. Download the dataset miniImageNet into `$DATA_ROOT/dataset/miniImageNet` using `gdown`:
 ```
@@ -118,6 +124,7 @@ $ for f in $(ls $DATA_ROOT/dataset/miniImageNet ); do tar -xf $DATA_ROOT/dataset
 
 You can do the same steps in a similar way for Fewshot-CIFAR100 (`fc100`), but in the paper we only report mini-ImageNet and CUB10 to save space. 
 
+</details>
 
 ### Data pipeline
 

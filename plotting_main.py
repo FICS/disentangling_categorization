@@ -45,34 +45,32 @@ experiments['q1'] = [
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111121-065556', # 5x resnet50
 ]
 
-experiments['q1c'] = [
-    f'{project_root}/research_pool/config_archive/COMMS-TEST/111121-065556',
-]
+# experiments['q1c'] = [
+#     f'{project_root}/research_pool/config_archive/COMMS-TEST/111121-065556',
+# ]
 
 experiments['q2'] = [
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111221-014304', # 5x resnet50
 ]
 
-experiments['q2c'] = [
-    
-]
+# experiments['q2c'] = [
+# ]
 
 experiments['q3'] = [
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111121-154815', # 5x proto resnet50
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111121-154941', # 5x cw resnet50 
 ]
 
-experiments['q3c'] = [
-    
-]
+# experiments['q3c'] = [
+# ]
 
 experiments['q4'] = [
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111221-013220', # 5x proto resnet50
     f'{project_root}/research_pool/config_archive/SEMIOSIS/111221-013404', # 5x proto resnet50 (FL)
 ]
 
-experiments['q4c'] = [
-]
+# experiments['q4c'] = [
+# ]
 
 experiments['q5'] = [
     f'{project_root}/research_pool/config_archive/SEMIOSIS/011522-001252', # 5x proto
@@ -81,9 +79,8 @@ experiments['q5'] = [
     f'{project_root}/research_pool/config_autogen/COMMS-TEST/111121-154941', # 5x cw resnet50
 ]
 
-experiments['q5c'] = [
-    
-]
+# experiments['q5c'] = [
+# ]
 
 
 args = argparse.ArgumentParser()
@@ -496,4 +493,4 @@ if args['recreate']:
     print(save_path)
     print('\n'.join(ac_lines))
     
-    # Done with q1
+    # Done with Table 1

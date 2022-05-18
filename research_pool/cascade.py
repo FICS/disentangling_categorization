@@ -227,8 +227,6 @@ pool = np.concatenate([opt['node_to_gpuid'][node] for node in nodes])
 total_capacity = capacity_per_device * len(pool)
 print(f"Total capcity: {total_capacity}")
 
-# Better to handle multi-node multi-gpu case with #gpu = 1
-
     
 # print(f"\nprocess queue {weight_so_far}\n", *[f"{j}\n" for j in jobs])
 bins = binpacking.to_constant_bin_number(jobs, len(pool))
